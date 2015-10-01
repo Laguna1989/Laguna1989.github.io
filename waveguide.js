@@ -27,6 +27,8 @@ ApplicationMain.create = function() {
 	types.push("TEXT");
 	urls.push("assets/images/images-go-here.txt");
 	types.push("TEXT");
+	urls.push("assets/images/text.png");
+	types.push("IMAGE");
 	urls.push("assets/music/music-goes-here.txt");
 	types.push("TEXT");
 	urls.push("assets/sounds/sounds-go-here.txt");
@@ -65,7 +67,7 @@ ApplicationMain.init = function() {
 	if(total == 0) ApplicationMain.start();
 };
 ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "67", company : "HaxeFlixel", file : "waveguide", fps : 60, name : "waveguide", orientation : "portrait", packageName : "com.example.myapp", version : "0.0.1", windows : [{ antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 500, parameters : "{}", resizable : true, stencilBuffer : true, title : "waveguide", vsync : true, width : 500, x : null, y : null}]};
+	ApplicationMain.config = { build : "78", company : "HaxeFlixel", file : "waveguide", fps : 60, name : "waveguide", orientation : "portrait", packageName : "com.example.myapp", version : "0.0.1", windows : [{ antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 530, parameters : "{}", resizable : true, stencilBuffer : true, title : "waveguide", vsync : true, width : 500, x : null, y : null}]};
 };
 ApplicationMain.start = function() {
 	var hasMain = false;
@@ -1255,7 +1257,7 @@ var Main = function() {
 	this.framerate = 60;
 	this.zoom = -1;
 	this.initialState = MenuState;
-	this.gameHeight = 500;
+	this.gameHeight = 530;
 	this.gameWidth = 500;
 	openfl.display.Sprite.call(this);
 	if(this.stage != null) this.init(); else this.addEventListener(openfl.events.Event.ADDED_TO_STAGE,$bind(this,this.init));
@@ -1303,6 +1305,9 @@ DocumentClass.__super__ = Main;
 DocumentClass.prototype = $extend(Main.prototype,{
 	__class__: DocumentClass
 });
+var AssetPaths = function() { };
+$hxClasses["AssetPaths"] = AssetPaths;
+AssetPaths.__name__ = ["AssetPaths"];
 var lime = {};
 lime.AssetLibrary = function() {
 	this.onChange = new lime.app.Event_Void_Void();
@@ -1394,6 +1399,9 @@ var DefaultAssetLibrary = function() {
 	id = "assets/images/images-go-here.txt";
 	this.path.set(id,id);
 	this.type.set(id,"TEXT");
+	id = "assets/images/text.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	id = "assets/music/music-goes-here.txt";
 	this.path.set(id,id);
 	this.type.set(id,"TEXT");
@@ -2404,7 +2412,7 @@ NMEPreloader.prototype = $extend(openfl.display.Sprite.prototype,{
 		return 0;
 	}
 	,getHeight: function() {
-		var height = 500;
+		var height = 530;
 		if(height > 0) return height; else return openfl.Lib.current.stage.stageHeight;
 	}
 	,getWidth: function() {
@@ -2435,6 +2443,7 @@ PlayState.prototype = $extend(flixel.FlxState.prototype,{
 	tiles: null
 	,dx: null
 	,sigma: null
+	,runvsimg: null
 	,timer: null
 	,GetTile: function(x,y) {
 		return this.tiles[x + y * Tile.WorldSize];
@@ -2459,7 +2468,12 @@ PlayState.prototype = $extend(flixel.FlxState.prototype,{
 				this.add(t);
 			}
 		}
-		this.timer = new flixel.util.FlxTimer(0.075,$bind(this,this.createBlob),0);
+		this.timer = new flixel.util.FlxTimer(0.075,$bind(this,this.creatDrop),0);
+		this.runvsimg = new flixel.FlxSprite();
+		this.runvsimg.loadGraphic("assets/images/text.png",false,500,30);
+		this.runvsimg.origin.set();
+		this.runvsimg.setPosition(0,500);
+		this.add(this.runvsimg);
 	}
 	,destroy: function() {
 		flixel.FlxState.prototype.destroy.call(this);
@@ -2480,10 +2494,10 @@ PlayState.prototype = $extend(flixel.FlxState.prototype,{
 			}
 		}
 	}
-	,createBlob: function(t) {
-		var i = flixel.util.FlxRandom.intRanged(1,Tile.WorldSize - 2);
-		var j = flixel.util.FlxRandom.intRanged(1,Tile.WorldSize - 2);
-		if(flixel.util.FlxRandom.floatRanged(0,100) < 50) this.createBlob(t);
+	,creatDrop: function(t) {
+		var i = flixel.util.FlxRandom.intRanged(1,Tile.WorldSize - 3);
+		var j = flixel.util.FlxRandom.intRanged(1,Tile.WorldSize - 3);
+		if(flixel.util.FlxRandom.floatRanged(0,100) < 50) this.creatDrop(t);
 		if(flixel.util.FlxRandom.floatRanged(0,100) < 50) {
 			this.GetTile(i,j).Temperatur += 0.35;
 			this.GetTile(i + 1,j).Temperatur += 0.35;
@@ -51030,6 +51044,11 @@ openfl.ui.Multitouch.supportsGestureEvents = false;
 openfl.display.DisplayObject.__instanceCount = 0;
 openfl.display.DisplayObject.__worldRenderDirty = 0;
 openfl.display.DisplayObject.__worldTransformDirty = 0;
+AssetPaths.data_goes_here__txt = "assets/data/data-goes-here.txt";
+AssetPaths.images_go_here__txt = "assets/images/images-go-here.txt";
+AssetPaths.text__png = "assets/images/text.png";
+AssetPaths.music_goes_here__txt = "assets/music/music-goes-here.txt";
+AssetPaths.sounds_go_here__txt = "assets/sounds/sounds-go-here.txt";
 openfl.text.Font.__registeredFonts = new Array();
 flixel.util.FlxRect._pool = new flixel.util.FlxPool(flixel.util.FlxRect);
 flixel.FlxObject.SEPARATE_BIAS = 4;
