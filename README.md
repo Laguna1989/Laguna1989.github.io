@@ -26,5 +26,5 @@ heatguide techdemo
         4.0 * t.Temperatur ); // again this tile
         
         t.Temperatur = v ;
+       }
      }
- }
